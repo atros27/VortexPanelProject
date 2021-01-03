@@ -84,7 +84,7 @@ public class VortexPanelProject extends JPanel {
         double alpha;
         for (i = y.length - 1; i >= 0; i--) {
             alpha = 0;
-            for (j = i + 1; j > y.length; j++) {
+            for (j = i + 1; j < y.length; j++) {
                 alpha += U[i][j] * x[j];
             }
             x[i] = (y[i] - alpha) / U[i][i];
@@ -352,29 +352,30 @@ public class VortexPanelProject extends JPanel {
             }
         }
 
-        for (int i = 0; i < LU.length; i++) {
-            for (int j = 0; j < LU.length; j++) {
-                System.out.printf("%f ", LU[i][j]);
-            }
-            System.out.printf("\n");
-        }
+        //for (int i = 0; i < LU.length; i++) {
+        //    for (int j = 0; j < LU.length; j++) {
+        //        System.out.printf("%f ", LU[i][j]);
+        //    }
+        //    System.out.printf("\n");
+        //}
 
         return LU;
     }
 
     static double[] forwardSubstitution(double[][] L, double[] b) {
         double[] y = new double[b.length];
-        int i, j;
         double alpha;
-        for (i = 0; i < L.length; i++) {
+        for (int i = 0; i < L.length; i++) {
             alpha = 0;
-            for (j = 0; j < i; j++) {
+            for (int j = 0; j < i; j++) {
                 alpha += L[i][j] * y[j];
             }
             y[i] = b[i] - alpha;
         }
         
-        
+        for(int i = 0; i < L.length; i++) {
+            System.out.printf("%f\n", y[i]);
+        }
         
         return y;
     }
@@ -442,6 +443,7 @@ public class VortexPanelProject extends JPanel {
                 } else if (i == j) { // Diagonal
                     Cn1 = -1;
                     Cn2 = 1;
+                    AN[i][j] = Cn1 + Cn2_prev;
                     Cn2_prev = Cn2;
                 } else { // Non-Diagonal
                     if (j == airfoil_x_real.length) {
@@ -464,6 +466,14 @@ public class VortexPanelProject extends JPanel {
                 }
             }
         }
+        
+        for(int i = 0; i<AN.length; i++) {
+            for(int j = 0; j<AN.length; j++) {
+                System.out.printf("%f ", AN[i][j]);
+            }
+            System.out.printf("\n");
+        }
+        
         double[] gamma = linearAlgebra(AN, RHS);
         for (int i = 0; i < gamma.length; i++) {
             gamma[i] *= v_inf;
